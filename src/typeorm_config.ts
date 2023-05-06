@@ -1,4 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { Airport } from './airports/airport.entity';
 import { User } from './users/user.entity';
 import * as dotenv from 'dotenv';
 
@@ -11,6 +12,6 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
-  entities: [User],
+  entities: [Airport, User],
   synchronize: process.env.NODE_ENV !== 'production',
 };
