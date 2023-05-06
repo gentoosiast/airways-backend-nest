@@ -4,12 +4,16 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import * as argon2 from 'argon2';
+import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { SignupUserDto } from './dto/signup-user.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
   async login(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
@@ -18,9 +22,12 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    // TODO: Generate a JWT and return it here
-    // instead of the user object
-    return user.toResponse();
+    const payload = { username: user.email, sub: user.id };
+
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+      user: user.toResponse(),
+    };
   }
 
   async signup(userDto: SignupUserDto) {
@@ -37,6 +44,11 @@ export class AuthService {
       password: hash,
     });
 
-    return user.toResponse();
+    const payload = { username: user.email, sub: user.id };
+
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+      user: user.toResponse(),
+    };
   }
 }
