@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -15,6 +16,15 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
+
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Airways backend')
+    .setDescription('Backend API for Airways application')
+    .setVersion('0.0.1')
+    .addTag('airways')
+    .build();
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('docs', app, document);
 
   await app.listen(port);
 }
