@@ -10,7 +10,7 @@ export class AirportsService {
     private userRepository: Repository<Airport>,
   ) {}
 
-  findByName(name: string) {
-    return this.userRepository.find({ where: { name: Like(`${name}%`) } });
+  findByCity(city: string) {
+    return this.userRepository.find({ where: { city: Like(`${city}%`) } });
   }
 }

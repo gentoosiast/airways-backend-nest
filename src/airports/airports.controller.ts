@@ -6,7 +6,7 @@ export class AirportsController {
   constructor(private airportsService: AirportsService) {}
 
   @Get()
-  airports(@Query('name') name: string) {
-    return this.airportsService.findByName(name);
+  airports(@Query('city') city: string) {
+    return this.airportsService.findByCity(city);
   }
 }
