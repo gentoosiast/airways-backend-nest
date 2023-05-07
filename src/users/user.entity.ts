@@ -3,7 +3,7 @@ import { Exclude } from 'class-transformer';
 import { Gender } from 'src/shared/enums/gender';
 
 @Entity()
-export class User {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -38,7 +38,7 @@ export class User {
   @Column()
   citizenship: string;
 
-  constructor(partial: Partial<User>) {
+  constructor(partial: Partial<UserEntity>) {
     Object.assign(this, partial);
   }
 }

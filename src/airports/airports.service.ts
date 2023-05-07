@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
-import { Airport } from './airport.entity';
+import { AirportEntity } from './airport.entity';
 
 @Injectable()
 export class AirportsService {
   constructor(
-    @InjectRepository(Airport)
-    private userRepository: Repository<Airport>,
+    @InjectRepository(AirportEntity)
+    private userRepository: Repository<AirportEntity>,
   ) {}
 
   findByCity(city: string) {
