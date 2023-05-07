@@ -19,7 +19,7 @@ export class AuthService {
   async login(email: string, password: string): Promise<UserResponseDto> {
     const user = await this.usersService.findByEmail(email);
 
-    if (!user || !(await argon2.verify(user?.password, password))) {
+    if (!user || !(await argon2.verify(user.password, password))) {
       throw new UnauthorizedException();
     }
 
