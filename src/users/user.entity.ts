@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { Gender } from 'src/shared/enums/gender';
 
 @Entity()
@@ -11,6 +12,7 @@ export class User {
   })
   email: string;
 
+  @Exclude()
   @Column()
   password: string;
 
@@ -36,27 +38,7 @@ export class User {
   @Column()
   citizenship: string;
 
-  toResponse() {
-    const {
-      id,
-      email,
-      firstName,
-      lastName,
-      birthDate,
-      gender,
-      phone,
-      citizenship,
-    } = this;
-
-    return {
-      id,
-      email,
-      firstName,
-      lastName,
-      birthDate,
-      gender,
-      phone,
-      citizenship,
-    };
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
   }
 }
