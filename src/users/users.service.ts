@@ -10,7 +10,7 @@ export class UsersService {
     private userRepository: Repository<UserEntity>,
   ) {}
 
-  create(userDto: SignupUserDto) {
+  create(userDto: SignupUserDto): Promise<UserEntity> {
     return this.userRepository.save(userDto);
   }
 
