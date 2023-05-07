@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsInt, IsPositive } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsInt,
+  IsPositive,
+  Length,
+} from 'class-validator';
 
 export class AirportResponseDto {
   @ApiProperty({
@@ -17,6 +23,7 @@ export class AirportResponseDto {
   })
   @IsNotEmpty()
   @IsString()
+  @Length(3, 3)
   iata_code: string;
 
   @ApiProperty({
