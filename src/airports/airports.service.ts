@@ -7,10 +7,10 @@ import { AirportEntity } from './airport.entity';
 export class AirportsService {
   constructor(
     @InjectRepository(AirportEntity)
-    private userRepository: Repository<AirportEntity>,
+    private airportRepository: Repository<AirportEntity>,
   ) {}
 
   findByCity(city: string) {
-    return this.userRepository.find({ where: { city: Like(`${city}%`) } });
+    return this.airportRepository.find({ where: { city: Like(`${city}%`) } });
   }
 }
