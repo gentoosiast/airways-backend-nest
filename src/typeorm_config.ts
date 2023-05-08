@@ -13,5 +13,6 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
   entities: [AirportEntity, UserEntity],
+  logging: process.env.NODE_ENV !== 'production',
   synchronize: process.env.NODE_ENV !== 'production',
 };
