@@ -6,6 +6,7 @@ import {
   IsPositive,
   Length,
 } from 'class-validator';
+import { IATA_CODE_LENGTH } from 'src/shared/constants';
 
 export class AirportResponseDto {
   @ApiProperty({
@@ -23,7 +24,7 @@ export class AirportResponseDto {
   })
   @IsNotEmpty()
   @IsString()
-  @Length(3, 3)
+  @Length(IATA_CODE_LENGTH, IATA_CODE_LENGTH)
   iata_code: string;
 
   @ApiProperty({
