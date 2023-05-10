@@ -10,6 +10,8 @@ async function bootstrap() {
   const isProduction = configService.get('NODE_ENV') === 'production';
   const port = configService.get('PORT');
 
+  app.enableCors();
+
   app.useGlobalPipes(
     new ValidationPipe({
       disableErrorMessages: isProduction,
