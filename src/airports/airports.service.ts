@@ -10,7 +10,13 @@ export class AirportsService {
     private airportRepository: Repository<AirportEntity>,
   ) {}
 
-  findByCity(city: string) {
-    return this.airportRepository.find({ where: { city: Like(`${city}%`) } });
+  async findByCity(city: string): Promise<AirportEntity[]> {
+    return this.airportRepository.find({
+      where: { city: Like(`${city}%`) },
+    });
+  }
+
+  async findByIATA(iata_code: string): Promise<AirportEntity | null> {
+    return this.airportRepository.findOneBy({ iata_code });
   }
 }
