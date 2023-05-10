@@ -1,11 +1,5 @@
 import Chance from 'chance';
-import {
-  subDays,
-  addDays,
-  addHours,
-  eachDayOfInterval,
-  setMinutes,
-} from 'date-fns';
+import { subDays, addDays, eachDayOfInterval } from 'date-fns';
 import { FlightPriceDto } from './dto/flights-response.dto';
 import {
   MINIMUM_SEATS_NUMBER,
@@ -100,17 +94,12 @@ export const generateArrivalDelay = (chance: Chance.Chance) => {
 };
 
 export const generateDepartureDate = (chance: Chance.Chance, date: Date) => {
-  console.log(`srcDate: ${date}`);
-  // const dateCopy = new Date(date);
+  const dateCopy = new Date(date);
   const hours = chance.hour({ twentyfour: true }) - 1;
   const minutes =
     Math.floor(chance.minute() / ROUND_TO_MINUTES) * ROUND_TO_MINUTES;
 
-  // dateCopy.setHours(hours, minutes);
-
-  const dateCopy = setMinutes(addHours(date, hours), minutes);
-
-  console.log(`dstDate: ${dateCopy}`);
+  dateCopy.setHours(hours, minutes);
 
   return dateCopy;
 };
