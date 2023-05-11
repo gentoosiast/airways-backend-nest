@@ -20,7 +20,7 @@ export class AuthService {
     const user = await this.usersService.findByEmail(email);
 
     if (!user || !(await argon2.verify(user.password, password))) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid username or password');
     }
 
     const payload = { username: user.email, sub: user.id };
