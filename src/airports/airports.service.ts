@@ -12,7 +12,7 @@ export class AirportsService {
 
   async findByCity(city: string): Promise<AirportEntity[]> {
     return this.airportRepository.find({
-      where: { city: ILike(`${city}%`) },
+      where: { city: ILike(`%${city}%`) },
     });
   }
 
