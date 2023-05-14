@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { AirportEntity } from './airport.entity';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class AirportsService {
 
   async findByCity(city: string): Promise<AirportEntity[]> {
     return this.airportRepository.find({
-      where: { city: Like(`${city}%`) },
+      where: { city: ILike(`${city}%`) },
     });
   }
 
