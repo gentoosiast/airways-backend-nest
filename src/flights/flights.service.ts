@@ -60,6 +60,10 @@ export class FlightsService {
       throw new BadRequestException('Return flight date is in the past');
     }
 
+    if (returnDate && flightDate > returnDate) {
+      throw new BadRequestException('Return flight date is ahead of departure flight date');
+    }
+
     return {
       flights: generateDatesBeforeAfter(new Date(flightDate)).map((date) => {
         return this.generateFlight(
