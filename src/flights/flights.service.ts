@@ -1,6 +1,6 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Chance } from 'chance';
-import { addMinutes } from 'date-fns';
+import { addMinutes, isPast } from 'date-fns';
 import { FlightsSearchDto } from './dto/flights-search.dto';
 import { AirportsService } from 'src/airports/airports.service';
 import { FlightsInfoDto, FlightsResponseDto } from './dto/flights-response.dto';
@@ -48,11 +48,17 @@ export class FlightsService {
     };
 
     const flightDate = new Date(flightsDto.flightDate);
-    console.log(`flightDate: ${flightDate}`);
     const returnDate = flightsDto.returnDate
       ? new Date(flightsDto.returnDate)
       : null;
-    console.log(`returnDate: ${returnDate}`);
+
+    if (isPast(flightDate)) {
+      throw new BadRequestException('Flight date is in the past');
+    }
+
+    if (returnDate && isPast(returnDate)) {
+      throw new BadRequestException('Return flight date is in the past');
+    }
 
     return {
       flights: generateDatesBeforeAfter(new Date(flightDate)).map((date) => {
