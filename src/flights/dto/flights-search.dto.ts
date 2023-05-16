@@ -3,6 +3,7 @@ import {
   IsDateString,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Length,
   Min,
@@ -41,6 +42,7 @@ export class FlightsSearchDto {
     example: '2023-05-24',
     required: false,
   })
+  @IsOptional()
   @IsNotEmpty()
   @IsDateString()
   returnDate?: string;
