@@ -148,13 +148,13 @@ export class FlightsInfoDto {
 export class FlightsResponseDto {
   @ApiProperty({
     description: 'List of flights',
-    isArray: true,
+    type: [FlightsInfoDto],
   })
   flights: FlightsInfoDto[];
 
   @ApiProperty({
     description: 'List of return flights',
-    isArray: true,
+    type: [FlightsInfoDto],
     required: false,
   })
   returnFlights?: FlightsInfoDto[];
