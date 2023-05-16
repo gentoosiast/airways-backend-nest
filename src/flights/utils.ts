@@ -95,7 +95,7 @@ export const generateArrivalDelay = (chance: Chance.Chance) => {
 
 export const generateDepartureDate = (chance: Chance.Chance, date: Date) => {
   const dateCopy = new Date(date);
-  const hours = chance.hour({ twentyfour: true }) - 1;
+  const hours = chance.integer({ min: dateCopy.getHours(), max: 23 });
   const minutes =
     Math.floor(chance.minute() / ROUND_TO_MINUTES) * ROUND_TO_MINUTES;
 
