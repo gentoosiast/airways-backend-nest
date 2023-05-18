@@ -11,62 +11,96 @@ import {
 } from 'class-validator';
 import { AirportResponseDto } from 'src/airports/dto/airport-response.dto';
 import {
-  FLIGHT_PRICE_DECIMAL_PLACES,
+  PRICE_DECIMAL_PLACES,
   MAXIMUM_AIRPORT_CONNECTIONS,
 } from '../constants';
 
-export class FlightPriceDto {
+export class PricesDto {
   @ApiProperty({
-    description: 'Flight price in EUR',
+    description: 'Price in EUR',
     example: 175.6,
   })
   @IsNotEmpty()
   @IsNumber({
     allowNaN: false,
     allowInfinity: false,
-    maxDecimalPlaces: FLIGHT_PRICE_DECIMAL_PLACES,
+    maxDecimalPlaces: PRICE_DECIMAL_PLACES,
   })
   @IsPositive()
   EUR: number;
 
   @ApiProperty({
-    description: 'Flight price in USD',
+    description: 'Price in USD',
     example: 193.16,
   })
   @IsNotEmpty()
   @IsNumber({
     allowNaN: false,
     allowInfinity: false,
-    maxDecimalPlaces: FLIGHT_PRICE_DECIMAL_PLACES,
+    maxDecimalPlaces: PRICE_DECIMAL_PLACES,
   })
   @IsPositive()
   USD: number;
 
   @ApiProperty({
-    description: 'Flight price in RUB',
+    description: 'Price in RUB',
     example: 15062.97,
   })
   @IsNotEmpty()
   @IsNumber({
     allowNaN: false,
     allowInfinity: false,
-    maxDecimalPlaces: FLIGHT_PRICE_DECIMAL_PLACES,
+    maxDecimalPlaces: PRICE_DECIMAL_PLACES,
   })
   @IsPositive()
   RUB: number;
 
   @ApiProperty({
-    description: 'Flight price in PLN',
+    description: 'Price in PLN',
     example: 802.49,
   })
   @IsNotEmpty()
   @IsNumber({
     allowNaN: false,
     allowInfinity: false,
-    maxDecimalPlaces: FLIGHT_PRICE_DECIMAL_PLACES,
+    maxDecimalPlaces: PRICE_DECIMAL_PLACES,
   })
   @IsPositive()
   PLN: number;
+}
+
+class PriceComponentsDto {
+  @ApiProperty({
+    description: "Fare"
+  })
+  fare: PricesDto;
+
+  @ApiProperty({
+    description: "Tax & Service Charge"
+  })
+  tax: PricesDto;
+}
+
+export class FlightPriceDto {
+  @ApiProperty({
+    description: "Total price of the flight"
+  })
+  total: PricesDto;
+
+  @ApiProperty({
+    description: "Fare, tax & service charge for adult"
+  })
+  adults: PriceComponentsDto;
+
+  @ApiProperty({
+    description: "Fare, tax & service charge for child"
+  })
+  children: PriceComponentsDto;
+
+  @ApiProperty({
+    description: "Fare, tax & service charge for infant"
+  })
+  infants: PriceComponentsDto;
 }
 
 export class FlightsInfoDto {

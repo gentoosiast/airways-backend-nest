@@ -1,11 +1,11 @@
 import Chance from 'chance';
 import { subDays, addDays, eachDayOfInterval } from 'date-fns';
-import { FlightPriceDto } from './dto/flights-response.dto';
+import { FlightPriceDto, PricesDto } from './dto/flights-response.dto';
 import {
   MINIMUM_SEATS_NUMBER,
   MAXIMUM_SEATS_NUMBER,
   NO_SEATS_CHANCE,
-  FLIGHT_PRICE_DECIMAL_PLACES,
+  PRICE_DECIMAL_PLACES,
   EUR_USD_COEFF,
   EUR_RUB_COEFF,
   EUR_PLN_COEFF,
@@ -13,12 +13,12 @@ import {
   MAX_FLIGHT_DURATION,
   AIRPORT_CONNECTIONS_CHANCE,
   MAXIMUM_AIRPORT_CONNECTIONS,
-  MINIMUM_ADULT_FARE,
-  MINIMUM_CHILD_FARE,
   MINIMUM_INFANT_FARE,
-  MAXIMUM_ADULT_FARE,
-  MAXIMUM_CHILD_FARE,
   MAXIMUM_INFANT_FARE,
+  MINIMUM_INFANT_TAX,
+  MAXIMUM_INFANT_TAX,
+  CHILDREN_PRICE_MULTIPLIER,
+  ADULTS_PRICE_MULTIPLIER,
   MINIMUM_ADDITIONAL_ARRIVAL_DELAY,
   MAXIMUM_ADDITIONAL_ARRIVAL_DELAY,
   ROUND_TO_MINUTES,
@@ -60,26 +60,47 @@ export const generateAvailableSeatsNumber = (
   return chance.integer({ min: 1, max: totalSeats });
 };
 
+const calculatePrices = (priceEUR: number): PricesDto => {
+  return {
+    EUR: +priceEUR.toFixed(PRICE_DECIMAL_PLACES),
+    USD: +(priceEUR * EUR_USD_COEFF).toFixed(PRICE_DECIMAL_PLACES),
+    RUB: +(priceEUR * EUR_RUB_COEFF).toFixed(PRICE_DECIMAL_PLACES),
+    PLN: +(priceEUR * EUR_PLN_COEFF).toFixed(PRICE_DECIMAL_PLACES),
+  }
+}
+
 export const generatePrice = (
   chance: Chance.Chance,
   passengers: Passengers,
 ): FlightPriceDto => {
-  const EUR = chance.floating({
-    min:
-      passengers.adults * MINIMUM_ADULT_FARE +
-      passengers.children * MINIMUM_CHILD_FARE +
-      passengers.infants * MINIMUM_INFANT_FARE,
-    max:
-      passengers.adults * MAXIMUM_ADULT_FARE +
-      passengers.children * MAXIMUM_CHILD_FARE +
-      passengers.infants * MAXIMUM_INFANT_FARE,
-    fixed: FLIGHT_PRICE_DECIMAL_PLACES,
-  });
-  const USD = +(EUR * EUR_USD_COEFF).toFixed(FLIGHT_PRICE_DECIMAL_PLACES);
-  const RUB = +(EUR * EUR_RUB_COEFF).toFixed(FLIGHT_PRICE_DECIMAL_PLACES);
-  const PLN = +(EUR * EUR_PLN_COEFF).toFixed(FLIGHT_PRICE_DECIMAL_PLACES);
+  const infantFare = chance.floating({min: MINIMUM_INFANT_FARE, max: MAXIMUM_INFANT_FARE}); 
+  const infantTax = chance.floating({min: MINIMUM_INFANT_TAX, max: MAXIMUM_INFANT_TAX});
+  const childFare = infantFare * CHILDREN_PRICE_MULTIPLIER;
+  const childTax = infantTax * CHILDREN_PRICE_MULTIPLIER;
+  const adultFare = infantFare * ADULTS_PRICE_MULTIPLIER;
+  const adultTax = infantTax * ADULTS_PRICE_MULTIPLIER;
 
-  return { EUR, USD, RUB, PLN };
+  const totalAdultsPrice = passengers.adults * (adultFare + adultTax);
+  const totalChildrenPrice = passengers.children * (childFare + childTax);
+  const totalInfantsPrice = passengers.infants * (infantFare + infantTax);
+
+  const totalPrice = totalAdultsPrice + totalChildrenPrice + totalInfantsPrice;
+
+  return {
+    total: calculatePrices(totalPrice),
+    adults: {
+      fare: calculatePrices(adultFare),
+      tax: calculatePrices(adultTax),
+    },
+    children: {
+      fare: calculatePrices(childFare),
+      tax: calculatePrices(childTax),
+    },
+    infants: {
+      fare: calculatePrices(infantFare),
+      tax: calculatePrices(infantTax),
+    }
+  }
 };
 
 export const generateFlightDuration = (chance: Chance.Chance): number => {
