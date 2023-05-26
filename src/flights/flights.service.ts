@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Chance } from 'chance';
-import { addMinutes, isPast } from 'date-fns';
+import { addMinutes, differenceInCalendarDays, isPast } from 'date-fns';
 import { FlightsSearchDto } from './dto/flights-search.dto';
 import { AirportsService } from 'src/airports/airports.service';
 import { FlightsInfoDto, FlightsResponseDto } from './dto/flights-response.dto';
@@ -52,7 +52,7 @@ export class FlightsService {
       ? new Date(flightsDto.returnDate)
       : null;
 
-    if (isPast(flightDate)) {
+    if (isPast(flightDate) && differenceInCalendarDays(flightDate, new Date()) < 0) {
       throw new BadRequestException('Flight date is in the past');
     }
 
