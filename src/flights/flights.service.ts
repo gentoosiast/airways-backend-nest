@@ -56,7 +56,7 @@ export class FlightsService {
       throw new BadRequestException('Flight date is in the past');
     }
 
-    if (returnDate && isPast(returnDate)) {
+    if (returnDate && isPast(returnDate) && differenceInCalendarDays(returnDate, new Date()) < 0) {
       throw new BadRequestException('Return flight date is in the past');
     }
 
